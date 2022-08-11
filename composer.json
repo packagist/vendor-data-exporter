@@ -16,9 +16,14 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {},
     "config": {
         "preferred-install": "dist",
         "sort-packages": true
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.9",
+        "phpstan/phpstan": "^1.8",
+        "phpstan/phpstan-deprecation-rules": "^1.0",
+        "phpstan/phpstan-strict-rules": "^1.3"
     }
 }
