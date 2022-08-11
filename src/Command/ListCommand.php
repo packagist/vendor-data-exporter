@@ -3,6 +3,8 @@
 namespace PrivatePackagist\VendorDataExporter\Command;
 
 use PrivatePackagist\ApiClient\Client as PackagistSdk;
+use PrivatePackagist\VendorDataExporter\Populator;
+use PrivatePackagist\VendorDataExporter\PopulatorInterface;
 use PrivatePackagist\VendorDataExporter\Registry;
 use PrivatePackagist\VendorDataExporter\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
@@ -16,6 +18,7 @@ class ListCommand extends Command
 
     public function __construct(
         private readonly RegistryInterface $registry = new Registry,
+        private readonly PopulatorInterface $apiModelPopulator = new Populator,
     ) {
         parent::__construct(self::DEFAULT_COMMAND_NAME);
     }
@@ -32,6 +35,7 @@ class ListCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $client = $this->getPackagistApiClient($input);
+        $customers = $this->apiModelPopulator->fetchCustomersAndPopulatePackageVersions($client, $this->registry);
 
         return 0;
     }
