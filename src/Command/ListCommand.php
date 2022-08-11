@@ -3,6 +3,8 @@
 namespace PrivatePackagist\VendorDataExporter\Command;
 
 use PrivatePackagist\ApiClient\Client as PackagistSdk;
+use PrivatePackagist\VendorDataExporter\Registry;
+use PrivatePackagist\VendorDataExporter\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,6 +15,7 @@ class ListCommand extends Command
     public const DEFAULT_COMMAND_NAME = 'list';
 
     public function __construct(
+        private readonly RegistryInterface $registry = new Registry,
     ) {
         parent::__construct(self::DEFAULT_COMMAND_NAME);
     }
