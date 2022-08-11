@@ -2,8 +2,10 @@
 
 namespace PrivatePackagist\VendorDataExporter\Model;
 
+use PrivatePackagist\VendorDataExporter\Util\VersionParser;
+
 /**
- * @phpstan-type CustomerShape array{id: int, name: string, urlName: string, enabled: bool, composerRepository: array{url: string}, minimumAccessibleStability: string}
+ * @phpstan-type CustomerShape array{id: int, name: string, urlName: string, enabled: bool, composerRepository: array{url: string}, minimumAccessibleStability: VersionParser::STABILITY_*}
  * @phpstan-import-type ConstraintShape from Constraint
  */
 class Customer
@@ -11,6 +13,7 @@ class Customer
     /** @var Access[] */
     private array $packages = [];
 
+    /** @param VersionParser::STABILITY_* $minimumAccessibleStability */
     protected function __construct(
         public readonly int $id,
         public readonly string $name,
