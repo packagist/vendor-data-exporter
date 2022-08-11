@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php declare(strict_types=1);
+
+require __DIR__ . '/../vendor/autoload.php';
+
+use PrivatePackagist\VendorDataExporter\Command\ListCommand;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Dotenv\Dotenv;
+use Symfony\Component\Dotenv\Exception\PathException;
+
+try {
+    // Check if the user has created an environment file in the directory they're currently in.
+    (new Dotenv)->loadEnv(getcwd() . '/.env');
+} catch (PathException) {
+    // But options can be passed in via the command-line if not.
+}
+
+$application = new Application('vendor-data-exporter', '1.0.0');
+
+$application->add($command = new ListCommand);
+$application->setDefaultCommand($command->getName() ?? ListCommand::DEFAULT_COMMAND_NAME, true);
+$application->run();
