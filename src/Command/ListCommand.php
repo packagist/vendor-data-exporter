@@ -32,7 +32,7 @@ class ListCommand extends Command
             ->setName(self::DEFAULT_COMMAND_NAME)
             ->addOption('token', null, InputOption::VALUE_REQUIRED, 'Private Packagist API Token')
             ->addOption('secret', null, InputOption::VALUE_REQUIRED, 'Private Packagist API Secret')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format', 'txt', fn (): array => $this->outputFormatterManager->getValidFormats())
+            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json, or csv)', 'txt', fn (): array => $this->outputFormatterManager->getValidFormats())
             ->setDescription('List package versions that a vendor\'s customers have access to.');
     }
 

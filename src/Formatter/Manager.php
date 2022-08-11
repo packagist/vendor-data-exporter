@@ -6,10 +6,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Manager implements ManagerInterface
 {
-    /** @var array<string, class-string<FormatterInterface>> */
-    protected const DEFAULT_FORMATTERS = [];
+    /** @var non-empty-array<string, class-string<FormatterInterface>> */
+    protected const DEFAULT_FORMATTERS = [
+        'txt' => TextFormatter::class,
+        'json' => JsonFormatter::class,
+        'csv' => CsvFormatter::class,
+    ];
 
-    /** @param array<string, class-string<FormatterInterface>> $formatters */
+    /** @param non-empty-array<string, class-string<FormatterInterface>> $formatters */
     public function __construct(
         private array $formatters = self::DEFAULT_FORMATTERS,
     ) {}
@@ -24,7 +28,7 @@ class Manager implements ManagerInterface
         return new $class($output);
     }
 
-    /** @return string[] */
+    /** @return non-empty-array<int, string> */
     public function getValidFormats(): array
     {
         return array_keys($this->formatters);
