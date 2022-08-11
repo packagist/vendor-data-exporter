@@ -1,0 +1,24 @@
+{
+    "name": "private-packagist/vendor-data-exporter",
+    "description": "A tool to fetch package versions that a vendor's customers have access to.",
+    "keywords": ["packagist", "composer", "api", "sdk", "vendor", "customer"],
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "PrivatePackagist\\VendorDataExporter\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Zan Baldwin",
+            "email": "z.baldwin@packagist.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {},
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    }
+}
