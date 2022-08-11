@@ -1,4 +1,5 @@
 /.idea/
+/bin/*.phar
 /vendor/
 /.env
 /.php-cs-fixer.cache

@@ -1,0 +1,20 @@
+{
+    "base-path": null,
+    "main": "bin/console",
+    "output": "bin/packagist-vendor-data-exporter.phar",
+    "files": ["bin/console", "composer.json", "LICENSE.md"],
+    "directories": ["src"],
+    "finder": [
+        {
+            "notPath": [
+                "\/\\\/(composer\\.(json|lock)|[A-Z]+\\.md(?:own)?|\\.gitignore|appveyor.yml|phpunit\\.xml\\.dist|phpstan\\.neon\\.dist|phpstan-config\\.neon|phpstan-baseline\\.neon)$\/",
+                "\/bin\\\/(jsonlint|validate-json|simple-phpunit|phpstan|phpstan\\.phar)(\\.bat)?$\/"
+            ],
+            "exclude": ["Tests", "tests", "docs"],
+            "in": "vendor"
+        }
+    ],
+    "compactors": ["KevinGH\\Box\\Compactor\\Php"],
+    "compression": "BZ2",
+    "algorithm": "SHA256"
+}
