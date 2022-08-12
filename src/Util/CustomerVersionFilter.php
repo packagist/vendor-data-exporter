@@ -13,6 +13,9 @@ class CustomerVersionFilter
 
     public function __invoke(Model\Version $version): bool
     {
+        if ($version->package->name !== $this->access->package->name) {
+            return false;
+        }
         return ($this->access->constraints->expirationDate === null || $version->releasedAt === null || $this->access->constraints->expirationDate >= $version->releasedAt)
             && ($this->access->constraints->minimumStability === null || VersionParser::stabilityGreaterThanOrEqualTo($version->normalised, $this->access->constraints->minimumStability))
             && ($this->access->constraints->version === null || Semver::satisfies($version->normalised, $this->access->constraints->version));

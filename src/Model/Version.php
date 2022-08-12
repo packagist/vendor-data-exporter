@@ -8,6 +8,7 @@ namespace PrivatePackagist\VendorDataExporter\Model;
 class Version
 {
     protected function __construct(
+        public readonly Package $package,
         public readonly string $version,
         public readonly string $normalised,
         public readonly ?\DateTimeInterface $releasedAt,
@@ -16,9 +17,10 @@ class Version
     /**
      * @param VersionShape $data
      */
-    public static function fromApiData(array $data): self
+    public static function fromApiData(Package $package, array $data): self
     {
         return new self(
+            $package,
             $data['version'],
             $data['versionNormalized'],
             array_key_exists('releasedAt', $data) && is_string($data['releasedAt'])

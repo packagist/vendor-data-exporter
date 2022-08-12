@@ -19,17 +19,15 @@ class Registry implements RegistryInterface
     public function registerPackageFromApiData(array $data): Model\Package
     {
         $package = Model\Package::fromApiData($data);
-        $this->versions[$package->name] ??= [];
         return $this->packages[$package->name] ??= $package;
     }
 
     /** @throws \LogicException */
     public function registerVersionFromApiData(Model\Package $package, array $data): Model\Version
     {
-        if (!array_key_exists($package->name, $this->versions)) {
-            throw new \LogicException(sprintf('Cannot register version; package "%s" has not been registered.', $package->name));
-        }
-        $version = Model\Version::fromApiData($data);
+        $package = ($this->packages[$package->name] ??= $package);
+        $version = Model\Version::fromApiData($package, $data);
+        $this->versions[$package->name] ??= [];
         return $this->versions[$package->name][$version->normalised] ??= $version;
     }
 
