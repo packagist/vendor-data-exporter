@@ -5,7 +5,6 @@ namespace PrivatePackagist\VendorDataExporter\Formatter;
 use League\Csv\Writer;
 use PrivatePackagist\VendorDataExporter\Model;
 use PrivatePackagist\VendorDataExporter\RegistryInterface;
-use PrivatePackagist\VendorDataExporter\Util\CustomerVersionFilter;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CsvFormatter implements FormatterInterface
@@ -27,11 +26,7 @@ class CsvFormatter implements FormatterInterface
         foreach ($customers as $customer) {
             foreach ($customer->getPackageAccess() as $access) {
                 $package = $access->package;
-                $versionsCustomerHasAccessTo = array_filter(
-                    $registry->getVersionsForPackage($package),
-                    new CustomerVersionFilter($access),
-                );
-                foreach ($versionsCustomerHasAccessTo as $version) {
+                foreach ($registry->getPackageVersionsCustomerCanAccess($access) as $version) {
                     $csv->insertOne([
                         $customer->name,
                         $customer->slug,

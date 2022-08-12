@@ -16,4 +16,6 @@ interface RegistryInterface
     public function getPackages(): array;
     /** @return array<string, Model\Version> */
     public function getVersionsForPackage(Model\Package $package): array;
+    /** @return array<string, Model\Version> */
+    public function getPackageVersionsCustomerCanAccess(Model\Access $access): array;
 }

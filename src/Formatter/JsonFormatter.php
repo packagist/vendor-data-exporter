@@ -4,7 +4,6 @@ namespace PrivatePackagist\VendorDataExporter\Formatter;
 
 use PrivatePackagist\VendorDataExporter\Model;
 use PrivatePackagist\VendorDataExporter\RegistryInterface;
-use PrivatePackagist\VendorDataExporter\Util\CustomerVersionFilter;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class JsonFormatter implements FormatterInterface
@@ -26,10 +25,10 @@ class JsonFormatter implements FormatterInterface
             'url' => $customer->url,
             'packages' => array_values(array_map(fn (Model\Access $access): array => [
                 'name' => $access->package->name,
-                'versions' => array_values(array_map(fn (Model\Version $version): string => $version->version, array_filter(
-                    $registry->getVersionsForPackage($access->package),
-                    new CustomerVersionFilter($access),
-                ))),
+                'versions' => array_values(array_map(
+                    fn (Model\Version $version): string => $version->version,
+                    $registry->getPackageVersionsCustomerCanAccess($access),
+                )),
             ], $customer->getPackageAccess())),
         ], $customers), \JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR);
 

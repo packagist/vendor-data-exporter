@@ -2,6 +2,8 @@
 
 namespace PrivatePackagist\VendorDataExporter;
 
+use PrivatePackagist\VendorDataExporter\Util\CustomerVersionFilter;
+
 /**
  * @phpstan-import-type PackageShape from Model\Package
  * @phpstan-import-type VersionShape from Model\Version
@@ -40,5 +42,14 @@ class Registry implements RegistryInterface
     public function getVersionsForPackage(Model\Package $package): array
     {
         return $this->versions[$package->name] ?? throw new \InvalidArgumentException(sprintf('Package "%s" was not found in registry.', $package->name));
+    }
+
+    /** @throws \InvalidArgumentException */
+    public function getPackageVersionsCustomerCanAccess(Model\Access $access): array
+    {
+        return array_filter(
+            $this->versions[$access->package->name] ?? throw new \InvalidArgumentException(sprintf('Package "%s" was not found in registry.', $access->package->name)),
+            new CustomerVersionFilter($access),
+        );
     }
 }
