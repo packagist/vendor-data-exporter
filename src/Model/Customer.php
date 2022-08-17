@@ -10,8 +10,11 @@ use PrivatePackagist\VendorDataExporter\Util\VersionParser;
  */
 class Customer
 {
-    /** @var Access[] */
+    /** @var Package[] */
     private array $packages = [];
+
+    /** @var Access[] */
+    private array $packageAccess = [];
 
     /** @param VersionParser::STABILITY_* $minimumAccessibleStability */
     protected function __construct(
@@ -38,12 +41,17 @@ class Customer
         );
     }
 
+    public function addPackage(Package $package): void
+    {
+        $this->packages[$package->name] ??= $package;
+    }
+
     /**
      * @param ConstraintShape $data
      */
-    public function addPackage(Package $package, array $data): void
+    public function addPackageAccess(Package $package, array $data): void
     {
-        $this->packages[$package->name] ??= new Access($package, new Constraint(
+        $this->packageAccess[$package->name] ??= new Access($package, new Constraint(
             $data['versionConstraint'] ?? null,
             $data['minimumAccessibleStability'] ?? $this->minimumAccessibleStability,
             array_key_exists('expirationDate', $data) && is_string($data['expirationDate'])
@@ -52,9 +60,15 @@ class Customer
         ));
     }
 
+    /** @return Package[] */
+    public function getPackages(): array
+    {
+        return $this->packages;
+    }
+
     /** @return Access[] */
     public function getPackageAccess(): array
     {
-        return $this->packages;
+        return $this->packageAccess;
     }
 }

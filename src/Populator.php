@@ -40,7 +40,7 @@ class Populator implements PopulatorInterface
             }
             foreach ($response as $packageData) {
                 $package = $registry->registerPackageFromApiData($packageData);
-                $customer->addPackage($package, $packageData);
+                $customer->addPackageAccess($package, $packageData);
             }
         }
         return $customers;
