@@ -37,5 +37,18 @@ class TextFormatter implements FormatterInterface
     /** @param Model\Customer[] $customers */
     public function displayFromModels(array $customers): void
     {
+        $table = new Table($this->output);
+        $table->setHeaderTitle('Vendor Customers and Package Versions');
+        $table->setHeaders(['Customer Name', 'Package Name', 'Version']);
+
+        foreach ($customers as $customer) {
+            foreach ($customer->getPackages() as $package) {
+                foreach ($package->getVersions() as $version) {
+                    $table->addRow([$customer->name, $package->name, $version->version]);
+                }
+            }
+        }
+
+        $table->render();
     }
 }

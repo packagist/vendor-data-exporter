@@ -38,5 +38,20 @@ class JsonFormatter implements FormatterInterface
     /** @param Model\Customer[] $customers */
     public function displayFromModels(array $customers): void
     {
+        $json = json_encode(array_map(fn (Model\Customer $customer): array => [
+            'identifier' => $customer->slug,
+            'name' => $customer->name,
+            'enabled' => $customer->enabled,
+            'url' => $customer->url,
+            'packages' => array_values(array_map(fn (Model\Package $package): array => [
+                'name' => $package->name,
+                'versions' => array_values(array_map(
+                    fn (Model\Version $version): string => $version->version,
+                    $package->getVersions(),
+                )),
+            ], $customer->getPackages())),
+        ], $customers), \JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR);
+
+        $this->output->writeln($json);
     }
 }
