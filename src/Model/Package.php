@@ -7,6 +7,9 @@ namespace PrivatePackagist\VendorDataExporter\Model;
  */
 class Package
 {
+    /** @var Version[] */
+    private array $versions = [];
+
     protected function __construct(
         public readonly string $name,
     ) {}
@@ -19,5 +22,26 @@ class Package
         return new self(
             $data['name'],
         );
+    }
+
+    public function addVersion(Version $version): Version
+    {
+        if ($version->package->name !== $this->name) {
+            throw new \InvalidArgumentException(sprintf(
+                'Version "%s:%s" does not belong to package "%s".',
+                $version->package->name,
+                $version->version,
+                $this->name,
+            ));
+        }
+        return $this->versions[$version->normalised] ??= $version;
+    }
+
+    /**
+     * @return Version[]
+     */
+    public function getVersions(): array
+    {
+        return $this->versions;
     }
 }

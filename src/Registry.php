@@ -13,22 +13,18 @@ class Registry implements RegistryInterface
     /** @var array<string, Model\Package> */
     private array $packages = [];
 
-    /** @var array<string, array<string, Model\Version>> */
-    private array $versions = [];
-
     public function registerPackageFromApiData(array $data): Model\Package
     {
         $package = Model\Package::fromApiData($data);
         return $this->packages[$package->name] ??= $package;
     }
 
-    /** @throws \LogicException */
     public function registerVersionFromApiData(Model\Package $package, array $data): Model\Version
     {
         $package = ($this->packages[$package->name] ??= $package);
         $version = Model\Version::fromApiData($package, $data);
-        $this->versions[$package->name] ??= [];
-        return $this->versions[$package->name][$version->normalised] ??= $version;
+        $package->addVersion($version);
+        return $version;
     }
 
     public function getPackages(): array
@@ -36,18 +32,8 @@ class Registry implements RegistryInterface
         return $this->packages;
     }
 
-    /** @throws \InvalidArgumentException */
-    public function getVersionsForPackage(Model\Package $package): array
-    {
-        return $this->versions[$package->name] ?? throw new \InvalidArgumentException(sprintf('Package "%s" was not found in registry.', $package->name));
-    }
-
-    /** @throws \InvalidArgumentException */
     public function getPackageVersionsCustomerCanAccess(Model\Access $access): array
     {
-        return array_filter(
-            $this->versions[$access->package->name] ?? throw new \InvalidArgumentException(sprintf('Package "%s" was not found in registry.', $access->package->name)),
-            new CustomerVersionFilter($access),
-        );
+        return array_filter($access->package->getVersions(), new CustomerVersionFilter($access));
     }
 }
