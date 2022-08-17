@@ -2,7 +2,6 @@
 
 namespace PrivatePackagist\VendorDataExporter\Command;
 
-use PrivatePackagist\ApiClient\Client as PackagistSdk;
 use PrivatePackagist\VendorDataExporter\Formatter\Manager;
 use PrivatePackagist\VendorDataExporter\Formatter\ManagerInterface;
 use PrivatePackagist\VendorDataExporter\Populator;
@@ -13,9 +12,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ListCommand extends AbstractPackagistApiCommand
+class FilterCommand extends AbstractPackagistApiCommand
 {
-    public const DEFAULT_COMMAND_NAME = 'list';
+    public const DEFAULT_COMMAND_NAME = 'filter';
 
     public function __construct(
         private readonly RegistryInterface $registry = new Registry,
@@ -41,7 +40,7 @@ class ListCommand extends AbstractPackagistApiCommand
         $customers = $this->apiModelPopulator->fetchCustomersAndPopulatePackageVersions($client, $this->registry);
 
         $formatter = $this->outputFormatterManager->getFormatter($output, $input->getOption('format'));
-        $formatter->display($this->registry, $customers);
+        $formatter->displayFromRegistry($this->registry, $customers);
 
         return 0;
     }

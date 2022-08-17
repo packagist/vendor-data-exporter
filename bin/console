@@ -3,7 +3,7 @@
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use PrivatePackagist\VendorDataExporter\Command\ListCommand;
+use PrivatePackagist\VendorDataExporter\Command;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Dotenv\Exception\PathException;
@@ -17,6 +17,6 @@ try {
 
 $application = new Application('vendor-data-exporter', '1.0.0');
 
-$application->add($command = new ListCommand);
-$application->setDefaultCommand($command->getName() ?? ListCommand::DEFAULT_COMMAND_NAME, true);
+$application->add($command = new Command\FilterCommand);
+$application->setDefaultCommand($command->getName() ?? Command\FilterCommand::DEFAULT_COMMAND_NAME, true);
 $application->run();
