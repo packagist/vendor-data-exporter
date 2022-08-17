@@ -1,8 +1,9 @@
 parameters:
     level: 8
     paths:
-        - src
         - bin
+        - src
+        - tests
     checkFunctionNameCase: true
     checkGenericClassInNonGenericObjectType: true
     parallel:
