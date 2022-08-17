@@ -11,5 +11,8 @@ interface FormatterInterface
     public function __construct(OutputInterface $output);
 
     /** @param Customer[] $customers */
-    public function display(RegistryInterface $registry, array $customers): void;
+    public function displayFromModels(array $customers): void;
+
+    /** @param Customer[] $customers */
+    public function displayFromRegistry(RegistryInterface $registry, array $customers): void;
 }

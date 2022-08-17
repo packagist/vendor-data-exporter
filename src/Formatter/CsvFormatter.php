@@ -17,7 +17,7 @@ class CsvFormatter implements FormatterInterface
     }
 
     /** @param Model\Customer[] $customers */
-    public function display(RegistryInterface $registry, array $customers): void
+    public function displayFromRegistry(RegistryInterface $registry, array $customers): void
     {
         $csv = Writer::createFromStream(tmpfile() ?: throw new \LogicException('System could not create temporary file for CSV.'));
         $csv->setFlushThreshold(100);
@@ -39,5 +39,10 @@ class CsvFormatter implements FormatterInterface
         }
 
         $this->output->write($csv->toString());
+    }
+
+    /** @param Model\Customer[] $customers */
+    public function displayFromModels(array $customers): void
+    {
     }
 }

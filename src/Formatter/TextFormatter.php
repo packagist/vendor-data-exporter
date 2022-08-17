@@ -17,7 +17,7 @@ class TextFormatter implements FormatterInterface
     }
 
     /** @param Model\Customer[] $customers */
-    public function display(RegistryInterface $registry, array $customers): void
+    public function displayFromRegistry(RegistryInterface $registry, array $customers): void
     {
         $table = new Table($this->output);
         $table->setHeaderTitle('Vendor Customers and Package Versions');
@@ -32,5 +32,10 @@ class TextFormatter implements FormatterInterface
         }
 
         $table->render();
+    }
+
+    /** @param Model\Customer[] $customers */
+    public function displayFromModels(array $customers): void
+    {
     }
 }

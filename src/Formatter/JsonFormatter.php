@@ -16,7 +16,7 @@ class JsonFormatter implements FormatterInterface
     }
 
     /** @param Model\Customer[] $customers */
-    public function display(RegistryInterface $registry, array $customers): void
+    public function displayFromRegistry(RegistryInterface $registry, array $customers): void
     {
         $json = json_encode(array_map(fn (Model\Customer $customer): array => [
             'identifier' => $customer->slug,
@@ -33,5 +33,10 @@ class JsonFormatter implements FormatterInterface
         ], $customers), \JSON_PRETTY_PRINT | \JSON_THROW_ON_ERROR);
 
         $this->output->writeln($json);
+    }
+
+    /** @param Model\Customer[] $customers */
+    public function displayFromModels(array $customers): void
+    {
     }
 }
