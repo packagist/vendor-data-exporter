@@ -47,7 +47,7 @@ class ListCommand extends AbstractPackagistApiCommand
             $packages = array_map(fn (array $packageData): Model\Package => Model\Package::fromApiData($packageData), $response);
             foreach ($packages as $package) {
                 /** @var array{versions?: VersionShape[]} $response */
-                $response = $client->customers()->listCustomerPackage($customer->id, $package->name);
+                $response = $client->customers()->showPackage($customer->id, $package->name);
                 $versions = array_map(fn (array $versionData): Model\Version => Model\Version::fromApiData($package, $versionData), $response['versions'] ?? []);
                 foreach ($versions as $version) {
                     $package->addVersion($version);
