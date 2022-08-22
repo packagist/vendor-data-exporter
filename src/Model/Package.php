@@ -34,7 +34,7 @@ class Package
                 $this->name,
             ));
         }
-        return $this->versions[$version->normalised] ??= $version;
+        return $this->versions[$version->normalized] ??= $version;
     }
 
     /**

@@ -10,7 +10,7 @@ class Version
     protected function __construct(
         public readonly Package $package,
         public readonly string $version,
-        public readonly string $normalised,
+        public readonly string $normalized,
         public readonly ?\DateTimeInterface $releasedAt,
     ) {}
 
