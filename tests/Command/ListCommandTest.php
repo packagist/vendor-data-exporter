@@ -2,18 +2,28 @@
 
 namespace PrivatePackagist\VendorDataExporter\Test\Command;
 
+use PHPUnit\Framework\TestCase;
+use PrivatePackagist\ApiClient\Client as PackagistApiClient;
+use PrivatePackagist\ApiClient\HttpClient\HttpPluginClientBuilder;
 use PrivatePackagist\VendorDataExporter\Command\ListCommand;
-use PrivatePackagist\VendorDataExporter\Test\TestCase;
+use PrivatePackagist\VendorDataExporter\Test\MockHttpClient;
+use PrivatePackagist\VendorDataExporter\Test\RequestCounterInterface;
+use Psr\Http\Client\ClientInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 
 class ListCommandTest extends TestCase
 {
+    protected readonly PackagistApiClient $packagistApiClient;
+    protected readonly ClientInterface&RequestCounterInterface $httpClient;
     private Command $command;
 
     public function setUp(): void
     {
+        $this->httpClient = new MockHttpClient;
+        $this->packagistApiClient = new PackagistApiClient(new HttpPluginClientBuilder($this->httpClient));
+
         $this->command = new ListCommand;
         $this->command->setPackagistApiClient($this->packagistApiClient);
     }
