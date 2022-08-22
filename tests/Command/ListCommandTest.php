@@ -25,7 +25,7 @@ class ListCommandTest extends TestCase
 
         $this->command->run($input, $output);
 
-        static::assertSame(50, $this->httpClient->getRequestCount());
+        static::assertSame(49, $this->httpClient->getRequestCount());
         static::assertSame(file_get_contents(__DIR__ . '/../res/output/output.txt'), $output->fetch());
     }
 
@@ -36,7 +36,7 @@ class ListCommandTest extends TestCase
 
         $this->command->run($input, $output);
 
-        static::assertSame(50, $this->httpClient->getRequestCount());
+        static::assertSame(49, $this->httpClient->getRequestCount());
         static::assertSame(file_get_contents(__DIR__ . '/../res/output/output.json'), $output->fetch());
     }
 
@@ -47,7 +47,7 @@ class ListCommandTest extends TestCase
 
         $this->command->run($input, $output);
 
-        static::assertSame(50, $this->httpClient->getRequestCount());
+        static::assertSame(49, $this->httpClient->getRequestCount());
         static::assertSame(file_get_contents(__DIR__ . '/../res/output/output.csv'), $output->fetch());
     }
 }
