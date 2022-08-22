@@ -57,7 +57,7 @@ class ListCommand extends AbstractPackagistApiCommand
         }
 
         $formatter = $this->outputFormatterManager->getFormatter($output, $input->getOption('format'));
-        $formatter->displayFromModels($customers);
+        $formatter->display($customers);
 
         return 0;
     }

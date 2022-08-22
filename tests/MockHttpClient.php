@@ -9,11 +9,9 @@ use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class MockHttpClient implements ClientInterface, RequestSetCounterInterface
+class MockHttpClient implements ClientInterface, RequestCounterInterface
 {
     private int $requestCount = 0;
-
-    private ?string $requestSet = null;
 
     public function __construct(
         private readonly SluggerInterface $slugger = new AsciiSlugger,
@@ -24,9 +22,8 @@ class MockHttpClient implements ClientInterface, RequestSetCounterInterface
         $this->requestCount++;
         $requestIdentifier = sprintf('%s %s', $request->getMethod(), $request->getUri()->getPath());
         $mockHttpResponse = file_get_contents($httpResponseFilepath = sprintf(
-            '%s/res/http/%s%s.json',
+            '%s/res/http/%s.json',
             __DIR__,
-            $this->getRequestSetSubDirectory(),
             $this->slugger->slug($requestIdentifier)->lower()->toString(),
         ));
 
@@ -41,20 +38,8 @@ class MockHttpClient implements ClientInterface, RequestSetCounterInterface
         );
     }
 
-    public function useRequestSet(?string $setName = null): void
-    {
-        $this->requestSet = $setName;
-    }
-
     public function getRequestCount(): int
     {
         return $this->requestCount;
-    }
-
-    private function getRequestSetSubDirectory(): string
-    {
-        return $this->requestSet !== null
-            ? $this->requestSet . '/'
-            : '';
     }
 }

@@ -12,7 +12,7 @@ class TestCase extends PHPUnitTestCase
     protected readonly PackagistApiClient $packagistApiClient;
 
     public function __construct(
-        protected readonly ClientInterface&RequestSetCounterInterface $httpClient = new MockHttpClient,
+        protected readonly ClientInterface&RequestCounterInterface $httpClient = new MockHttpClient,
     ) {
         $this->packagistApiClient = new PackagistApiClient(new HttpPluginClientBuilder($this->httpClient));
         parent::__construct();

@@ -2,8 +2,7 @@
 
 namespace PrivatePackagist\VendorDataExporter\Test;
 
-interface RequestSetCounterInterface
+interface RequestCounterInterface
 {
-    public function useRequestSet(?string $setName = null): void;
     public function getRequestCount(): int;
 }

@@ -10,8 +10,6 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 class ListCommandTest extends TestCase
 {
-    private const MOCK_HTTP_REQUEST_SET = 'list';
-
     private Command $command;
 
     public function setUp(): void
@@ -25,7 +23,6 @@ class ListCommandTest extends TestCase
         $input = new StringInput('--format=txt');
         $output = new BufferedOutput;
 
-        $this->httpClient->useRequestSet(self::MOCK_HTTP_REQUEST_SET);
         $this->command->run($input, $output);
 
         static::assertSame(50, $this->httpClient->getRequestCount());
@@ -37,7 +34,6 @@ class ListCommandTest extends TestCase
         $input = new StringInput('--format=json');
         $output = new BufferedOutput;
 
-        $this->httpClient->useRequestSet(self::MOCK_HTTP_REQUEST_SET);
         $this->command->run($input, $output);
 
         static::assertSame(50, $this->httpClient->getRequestCount());
@@ -49,7 +45,6 @@ class ListCommandTest extends TestCase
         $input = new StringInput('--format=csv');
         $output = new BufferedOutput;
 
-        $this->httpClient->useRequestSet(self::MOCK_HTTP_REQUEST_SET);
         $this->command->run($input, $output);
 
         static::assertSame(50, $this->httpClient->getRequestCount());
