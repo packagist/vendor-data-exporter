@@ -2,9 +2,11 @@
 
 namespace PrivatePackagist\VendorDataExporter\Command;
 
+use PrivatePackagist\ApiClient\Client as PackagistApiClient;
 use PrivatePackagist\VendorDataExporter\Formatter\Manager;
 use PrivatePackagist\VendorDataExporter\Formatter\ManagerInterface;
 use PrivatePackagist\VendorDataExporter\Model;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,9 +16,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @phpstan-import-type PackageShape from Model\Package
  * @phpstan-import-type VersionShape from Model\Version
  */
-class ListCommand extends AbstractPackagistApiCommand
+class ListCommand extends Command
 {
     public const DEFAULT_COMMAND_NAME = 'list';
+
+    private ?PackagistApiClient $packagistApiClient = null;
 
     public function __construct(
         private readonly ManagerInterface $outputFormatterManager = new Manager,
@@ -60,5 +64,29 @@ class ListCommand extends AbstractPackagistApiCommand
         $formatter->display($customers);
 
         return 0;
+    }
+
+    private function getPackagistApiClient(InputInterface $input): PackagistApiClient
+    {
+        if ($this->packagistApiClient !== null) {
+            return $this->packagistApiClient;
+        }
+
+        if (!is_string($token = $input->getOption('token'))) {
+            $token = $_ENV['PACKAGIST_API_TOKEN'] ?? throw new \InvalidArgumentException('Missing API credentials: provide API token via command flag or environment variable.');
+        }
+        if (!is_string($secret = $input->getOption('secret'))) {
+            $secret = $_ENV['PACKAGIST_API_SECRET'] ?? throw new \InvalidArgumentException('Missing API credentials: provide API secret via command flag or environment variable.');
+        }
+
+        $this->packagistApiClient = new PackagistApiClient(null, $_ENV['PACKAGIST_API_URL'] ?? null);
+        $this->packagistApiClient->authenticate($token, $secret);
+        return $this->packagistApiClient;
+    }
+
+    /** @test */
+    public function setPackagistApiClient(PackagistApiClient $client): void
+    {
+        $this->packagistApiClient = $client;
     }
 }
