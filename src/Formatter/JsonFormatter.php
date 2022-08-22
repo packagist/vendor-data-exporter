@@ -20,12 +20,13 @@ class JsonFormatter implements FormatterInterface
         $json = json_encode(array_map(fn (Model\Customer $customer): array => [
             'identifier' => $customer->slug,
             'name' => $customer->name,
-            'enabled' => $customer->enabled,
-            'url' => $customer->url,
             'packages' => array_values(array_map(fn (Model\Package $package): array => [
                 'name' => $package->name,
                 'versions' => array_values(array_map(
-                    fn (Model\Version $version): string => $version->version,
+                    fn (Model\Version $version): array => [
+                        'version' => $version->version,
+                        'normalized' => $version->normalized,
+                    ],
                     $package->getVersions(),
                 )),
             ], $customer->getPackages())),

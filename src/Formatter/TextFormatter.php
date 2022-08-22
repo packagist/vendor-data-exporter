@@ -20,12 +20,12 @@ class TextFormatter implements FormatterInterface
     {
         $table = new Table($this->output);
         $table->setHeaderTitle('Vendor Customers and Package Versions');
-        $table->setHeaders(['Customer Name', 'Package Name', 'Version']);
+        $table->setHeaders(['Customer Name', 'Customer Identifier', 'Package Name', 'Version', 'Version (Normalized)']);
 
         foreach ($customers as $customer) {
             foreach ($customer->getPackages() as $package) {
                 foreach ($package->getVersions() as $version) {
-                    $table->addRow([$customer->name, $package->name, $version->version]);
+                    $table->addRow([$customer->name, $customer->slug, $package->name, $version->version, $version->normalized]);
                 }
             }
         }

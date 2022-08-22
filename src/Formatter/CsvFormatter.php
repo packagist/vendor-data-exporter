@@ -30,7 +30,7 @@ class CsvFormatter implements FormatterInterface
                         $customer->slug,
                         $package->name,
                         $version->version,
-                        $version->normalised,
+                        $version->normalized,
                     ]);
                 }
             }
