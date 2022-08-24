@@ -82,5 +82,5 @@ The final output is comma-separated values (`csv`).
 
 ```shell
 # Example: upload the resulting CSV database to a webhook endpoint (for example, for your accounting software).
-bin/console --format="csv" | curl -fsSL --request 'POST' --data '@-' "https://accounting.depts.intranet/uploads/monthly-customer-data" --header "Authorization: Bearer ${ACCOUNTING_CREDENTIALS}"
+bin/console --format="csv" | curl -fsSL --request 'POST' --data '@-' "https://example.com/uploads/monthly-customer-data" --header "Authorization: Bearer ${ACCOUNTING_CREDENTIALS}"
 ```
