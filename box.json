@@ -15,6 +15,6 @@
         }
     ],
     "compactors": ["KevinGH\\Box\\Compactor\\Php"],
-    "compression": "BZ2",
+    "compression": "GZ",
     "algorithm": "SHA256"
 }
