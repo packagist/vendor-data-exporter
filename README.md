@@ -24,14 +24,16 @@ The resulting PHAR executable can be used in the following examples by replacing
 
 To use Vendor Data Exporter, you must authenticate with the Private Packagist API using an API Token and Secret. These can be provided either via command flags or environment variables.
 
+API credentials can be found on [Private Packagist](https://packagist.com) at: _Your Organization &rarr; Settings &rarr; API Access_.
+
 #### Command Flags
 
 The API token and secret can be passed in via the command flags `--token` and `--secret` respectively.
 
 ```shell
 bin/console \
-    --token="4fcd73cfc5d4c13a51c0" \
-    --secret="01b91f5d9323e108d35ad436733002078673ba6e6cad1c4e4d2fb269c40423d7"
+    --token="<REPLACE-WITH-YOUR-TOKEN>" \
+    --secret="<REPLACE-WITH-YOUR-SECRET>"
 ```
 
 API credentials passed in via the command flags take precedence over environment variables.
@@ -41,8 +43,8 @@ API credentials passed in via the command flags take precedence over environment
 The API token and secret can also be set in the environment variables `PACKAGIST_API_TOKEN` and `PACKAGIST_API_SECRET` respectively.
 
 ```shell
-export PACKAGIST_API_TOKEN="4fcd73cfc5d4c13a51c0"
-export PACKAGIST_API_SECRET="01b91f5d9323e108d35ad436733002078673ba6e6cad1c4e4d2fb269c40423d7"
+export PACKAGIST_API_TOKEN="<REPLACE-WITH-YOUR-TOKEN>"
+export PACKAGIST_API_SECRET="<REPLACE-WITH-YOUR-SECRET>"
 bin/console
 ```
 
@@ -50,8 +52,8 @@ Vendor Data Exporter will also check for the existence of a `.env` environment f
 
 ```shell
 cat ".env"
-PACKAGIST_API_TOKEN=4fcd73cfc5d4c13a51c0
-PACKAGIST_API_SECRET=01b91f5d9323e108d35ad436733002078673ba6e6cad1c4e4d2fb269c40423d7
+PACKAGIST_API_TOKEN=<REPLACE-WITH-YOUR-TOKEN>
+PACKAGIST_API_SECRET=<REPLACE-WITH-YOUR-SECRET>
 
 bin/console
 ```
@@ -76,9 +78,9 @@ bin/console --format="json" | jq --raw-output ".[].name" | sort | xargs -l -i ec
 
 #### CSV
 
-The final output is comma-separated vales (`csv`).
+The final output is comma-separated values (`csv`).
 
 ```shell
 # Example: upload the resulting CSV database to a webhook endpoint (for example, for your accounting software).
-bin/console --format="csv" | curl -fsSL --request 'POST' --data '@-' "https://accounting.acme.com/uploads/monthly-customer-data" --header "Authorization: Bearer ${ACCOUNTING_CREDENTIALS}"
+bin/console --format="csv" | curl -fsSL --request 'POST' --data '@-' "https://accounting.depts.intranet/uploads/monthly-customer-data" --header "Authorization: Bearer ${ACCOUNTING_CREDENTIALS}"
 ```
