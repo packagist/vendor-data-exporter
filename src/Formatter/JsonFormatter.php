@@ -7,12 +7,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class JsonFormatter implements FormatterInterface
 {
-    private OutputInterface $output;
-
-    public function __construct(OutputInterface $output)
-    {
-        $this->output = $output;
-    }
+    public function __construct(
+        private readonly OutputInterface $output,
+    ) {}
 
     /** @param Model\Customer[] $customers */
     public function display(array $customers): void
