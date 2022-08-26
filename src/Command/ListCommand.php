@@ -2,25 +2,27 @@
 
 namespace PrivatePackagist\VendorDataExporter\Command;
 
-use PrivatePackagist\ApiClient\Client as PackagistSdk;
+use PrivatePackagist\ApiClient\Client as PackagistApiClient;
 use PrivatePackagist\VendorDataExporter\Formatter\Manager;
 use PrivatePackagist\VendorDataExporter\Formatter\ManagerInterface;
-use PrivatePackagist\VendorDataExporter\Populator;
-use PrivatePackagist\VendorDataExporter\PopulatorInterface;
-use PrivatePackagist\VendorDataExporter\Registry;
-use PrivatePackagist\VendorDataExporter\RegistryInterface;
+use PrivatePackagist\VendorDataExporter\Model;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * @phpstan-import-type CustomerShape from Model\Customer
+ * @phpstan-import-type PackageShape from Model\Package
+ * @phpstan-import-type VersionShape from Model\Version
+ */
 class ListCommand extends Command
 {
     public const DEFAULT_COMMAND_NAME = 'list';
 
+    private ?PackagistApiClient $packagistApiClient = null;
+
     public function __construct(
-        private readonly RegistryInterface $registry = new Registry,
-        private readonly PopulatorInterface $apiModelPopulator = new Populator,
         private readonly ManagerInterface $outputFormatterManager = new Manager,
     ) {
         parent::__construct(self::DEFAULT_COMMAND_NAME);
@@ -39,16 +41,37 @@ class ListCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $client = $this->getPackagistApiClient($input);
-        $customers = $this->apiModelPopulator->fetchCustomersAndPopulatePackageVersions($client, $this->registry);
+
+        /** @var CustomerShape[] $response */
+        $response = $client->customers()->all();
+        $customers = array_map(fn (array $customerData): Model\Customer => Model\Customer::fromApiData($customerData), $response);
+        foreach ($customers as $customer) {
+            /** @var PackageShape[] $response */
+            $response = $client->customers()->listPackages($customer->id);
+            $packages = array_map(fn (array $packageData): Model\Package => Model\Package::fromApiData($packageData), $response);
+            foreach ($packages as $package) {
+                /** @var array{versions?: VersionShape[]} $response */
+                $response = $client->customers()->showPackage($customer->id, $package->name);
+                $versions = array_map(fn (array $versionData): Model\Version => Model\Version::fromApiData($package, $versionData), $response['versions'] ?? []);
+                foreach ($versions as $version) {
+                    $package->addVersion($version);
+                }
+                $customer->addPackage($package);
+            }
+        }
 
         $formatter = $this->outputFormatterManager->getFormatter($output, $input->getOption('format'));
-        $formatter->display($this->registry, $customers);
+        $formatter->display($customers);
 
         return 0;
     }
 
-    private function getPackagistApiClient(InputInterface $input): PackagistSdk
+    private function getPackagistApiClient(InputInterface $input): PackagistApiClient
     {
+        if ($this->packagistApiClient !== null) {
+            return $this->packagistApiClient;
+        }
+
         if (!is_string($token = $input->getOption('token'))) {
             $token = $_ENV['PACKAGIST_API_TOKEN'] ?? throw new \InvalidArgumentException('Missing API credentials: provide API token via command flag or environment variable.');
         }
@@ -56,9 +79,14 @@ class ListCommand extends Command
             $secret = $_ENV['PACKAGIST_API_SECRET'] ?? throw new \InvalidArgumentException('Missing API credentials: provide API secret via command flag or environment variable.');
         }
 
-        $apiClient = new PackagistSdk(null, $_ENV['PACKAGIST_API_URL'] ?? null);
-        $apiClient->authenticate($token, $secret);
+        $this->packagistApiClient = new PackagistApiClient(null, $_ENV['PACKAGIST_API_URL'] ?? null);
+        $this->packagistApiClient->authenticate($token, $secret);
+        return $this->packagistApiClient;
+    }
 
-        return $apiClient;
+    /** @test */
+    public function setPackagistApiClient(PackagistApiClient $client): void
+    {
+        $this->packagistApiClient = $client;
     }
 }
