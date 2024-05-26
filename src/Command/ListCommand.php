@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * @phpstan-import-type PackageShape from Model\Package
  * @phpstan-import-type VersionShape from Model\Version
  */
-class ListCommand extends Command
+final class ListCommand extends Command
 {
     public const DEFAULT_COMMAND_NAME = 'list';
 

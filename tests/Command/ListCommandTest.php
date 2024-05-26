@@ -40,7 +40,7 @@ class ListCommandTest extends TestCase
         $this->command->run($input, $output);
 
         static::assertCount(49, $this->httpClient->getRequests());
-        static::assertSame(file_get_contents(__DIR__ . '/../res/output/output.txt'), $output->fetch());
+        static::assertStringEqualsFile(__DIR__ . '/../res/output/output.txt', $output->fetch());
     }
 
     public function testJsonOutput(): void
@@ -51,7 +51,7 @@ class ListCommandTest extends TestCase
         $this->command->run($input, $output);
 
         static::assertCount(49, $this->httpClient->getRequests());
-        static::assertSame(file_get_contents(__DIR__ . '/../res/output/output.json'), $output->fetch());
+        static::assertStringEqualsFile(__DIR__ . '/../res/output/output.json', $output->fetch());
     }
 
     public function testCsvOutput(): void
@@ -62,6 +62,6 @@ class ListCommandTest extends TestCase
         $this->command->run($input, $output);
 
         static::assertCount(49, $this->httpClient->getRequests());
-        static::assertSame(file_get_contents(__DIR__ . '/../res/output/output.csv'), $output->fetch());
+        static::assertStringEqualsFile(__DIR__ . '/../res/output/output.csv', $output->fetch());
     }
 }
