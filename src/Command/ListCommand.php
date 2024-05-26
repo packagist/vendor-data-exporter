@@ -7,8 +7,8 @@ use PrivatePackagist\VendorDataExporter\Formatter\Manager;
 use PrivatePackagist\VendorDataExporter\Formatter\ManagerInterface;
 use PrivatePackagist\VendorDataExporter\Model;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -34,7 +34,14 @@ class ListCommand extends Command
             ->setName(self::DEFAULT_COMMAND_NAME)
             ->addOption('token', null, InputOption::VALUE_REQUIRED, 'Private Packagist API Token')
             ->addOption('secret', null, InputOption::VALUE_REQUIRED, 'Private Packagist API Secret')
-            ->addOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, json, or csv)', 'txt', fn (): array => $this->outputFormatterManager->getValidFormats())
+            ->addOption(
+                'format',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'The output format (txt, json, or csv)',
+                'txt',
+                fn(): array => $this->outputFormatterManager->getValidFormats()
+            )
             ->setDescription('List package versions that a vendor\'s customers have access to.');
     }
 
@@ -44,15 +51,24 @@ class ListCommand extends Command
 
         /** @var CustomerShape[] $response */
         $response = $client->customers()->all();
-        $customers = array_map(fn (array $customerData): Model\Customer => Model\Customer::fromApiData($customerData), $response);
+        $customers = array_map(
+            fn(array $customerData): Model\Customer => Model\Customer::fromApiData($customerData),
+            $response
+        );
         foreach ($customers as $customer) {
             /** @var PackageShape[] $response */
             $response = $client->customers()->listPackages($customer->id);
-            $packages = array_map(fn (array $packageData): Model\Package => Model\Package::fromApiData($packageData), $response);
+            $packages = array_map(
+                fn(array $packageData): Model\Package => Model\Package::fromApiData($packageData),
+                $response
+            );
             foreach ($packages as $package) {
                 /** @var array{versions?: VersionShape[]} $response */
                 $response = $client->customers()->showPackage($customer->id, $package->name);
-                $versions = array_map(fn (array $versionData): Model\Version => Model\Version::fromApiData($package, $versionData), $response['versions'] ?? []);
+                $versions = array_map(
+                    fn(array $versionData): Model\Version => Model\Version::fromApiData($package, $versionData),
+                    $response['versions'] ?? []
+                );
                 foreach ($versions as $version) {
                     $package->addVersion($version);
                 }
