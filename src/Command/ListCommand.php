@@ -3,6 +3,7 @@
 namespace PrivatePackagist\VendorDataExporter\Command;
 
 use PrivatePackagist\ApiClient\Client as PackagistApiClient;
+use PrivatePackagist\VendorDataExporter\Exceptions\MissingApiCredentialsException;
 use PrivatePackagist\VendorDataExporter\Formatter\Manager;
 use PrivatePackagist\VendorDataExporter\Formatter\ManagerInterface;
 use PrivatePackagist\VendorDataExporter\Model;
@@ -89,10 +90,10 @@ class ListCommand extends Command
         }
 
         if (!is_string($token = $input->getOption('token'))) {
-            $token = $_ENV['PACKAGIST_API_TOKEN'] ?? throw new \InvalidArgumentException('Missing API credentials: provide API token via command flag or environment variable.');
+            $token = $_ENV['PACKAGIST_API_TOKEN'] ?? throw MissingApiCredentialsException::missingApiToken();
         }
         if (!is_string($secret = $input->getOption('secret'))) {
-            $secret = $_ENV['PACKAGIST_API_SECRET'] ?? throw new \InvalidArgumentException('Missing API credentials: provide API secret via command flag or environment variable.');
+            $secret = $_ENV['PACKAGIST_API_SECRET'] ?? throw MissingApiCredentialsException::missingApiSecret();
         }
 
         $this->packagistApiClient = new PackagistApiClient(null, $_ENV['PACKAGIST_API_URL'] ?? null);
