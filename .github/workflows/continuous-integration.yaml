@@ -43,7 +43,7 @@ jobs:
                   path: |
                       ${{ steps.determine-composer-cache-directory.outputs.directory }}
                       ${{ github.workspace }}/vendor
-                  key: 'php-${{ matrix.php }}-${{ hashFiles("composer.lock") }}'
+                  key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
             - uses: 'ramsey/composer-install@v2'
               with:
@@ -71,7 +71,7 @@ jobs:
                   path: |
                       ${{ steps.determine-composer-cache-directory.outputs.directory }}
                       ${{ github.workspace }}/vendor
-                  key: 'php-${{ matrix.php }}-${{ hashFiles("composer.lock") }}'
+                  key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
             - uses: 'ramsey/composer-install@v2'
               with:
@@ -99,7 +99,7 @@ jobs:
                   path: |
                       ${{ steps.determine-composer-cache-directory.outputs.directory }}
                       ${{ github.workspace }}/vendor
-                  key: 'php-${{ matrix.php }}-${{ hashFiles("composer.lock") }}'
+                  key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
             - uses: 'ramsey/composer-install@v2'
               with:
