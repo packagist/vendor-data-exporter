@@ -16,18 +16,13 @@ class ListCommandTest extends TestCase
 {
     use MockedResponseHttpClientTrait;
 
-    private readonly MockHttpClient $httpClient;
+    private MockHttpClient $httpClient;
     private Command $command;
-
-    /** @phpstan-ignore-next-line TestCase constructor arguments are not covered by backwards-compatibility guarantee */
-    public function __construct(... $args)
-    {
-        parent::__construct(... $args);
-        $this->httpClient = $this->createMockedResponseHttpClientUsingDirectory(__DIR__ . '/../res/http');
-    }
 
     public function setUp(): void
     {
+        $this->httpClient = $this->createMockedResponseHttpClientUsingDirectory(__DIR__ . '/../res/http');
+
         $this->command = new ListCommand;
         $this->command->setPackagistApiClient(new PackagistApiClient(new HttpPluginClientBuilder($this->httpClient)));
     }
