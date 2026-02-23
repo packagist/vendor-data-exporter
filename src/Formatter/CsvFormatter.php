@@ -15,7 +15,7 @@ class CsvFormatter implements FormatterInterface
     /** @param Model\Customer[] $customers */
     public function display(array $customers): void
     {
-        $csv = Writer::createFromStream(tmpfile() ?: throw new \LogicException('System could not create temporary file for CSV.'));
+        $csv = Writer::from(tmpfile() ?: throw new \LogicException('System could not create temporary file for CSV.'));
         $csv->setFlushThreshold(100);
         $csv->insertOne(['Customer Name', 'Customer Identifier', 'Package Name', 'Version', 'Version (Normalized)']);
 
