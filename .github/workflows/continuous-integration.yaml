@@ -15,8 +15,8 @@ jobs:
             matrix:
                 php: ['8.1']
         steps:
-            - uses: 'actions/checkout@v2'
-            - uses: 'shivammathur/setup-php@v2'
+            - uses: 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' # v4
+            - uses: 'shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45' # v2
               with:
                   coverage: 'none'
                   php-version: '${{ matrix.php }}'
@@ -25,14 +25,14 @@ jobs:
               id: 'determine-composer-cache-directory'
               run: 'echo "::set-output name=directory::$(composer config cache-dir)"'
             - name: 'Cache dependencies installed with composer'
-              uses: 'actions/cache@v3'
+              uses: 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' # v4
               with:
                   path: |
                       ${{ steps.determine-composer-cache-directory.outputs.directory }}
                       ${{ github.workspace }}/vendor
                   key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
-            - uses: 'ramsey/composer-install@v2'
+            - uses: 'ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f' # v3.2.1
               with:
                   dependency-versions: 'highest'
             - run: './vendor/bin/php-cs-fixer fix --dry-run --diff --verbose'
@@ -43,8 +43,8 @@ jobs:
             matrix:
                 php: ['8.1']
         steps:
-            - uses: 'actions/checkout@v2'
-            - uses: 'shivammathur/setup-php@v2'
+            - uses: 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' # v4
+            - uses: 'shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45' # v2
               with:
                   coverage: 'none'
                   php-version: '${{ matrix.php }}'
@@ -53,14 +53,14 @@ jobs:
               id: 'determine-composer-cache-directory'
               run: 'echo "::set-output name=directory::$(composer config cache-dir)"'
             - name: 'Cache dependencies installed with composer'
-              uses: 'actions/cache@v3'
+              uses: 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' # v4
               with:
                   path: |
                       ${{ steps.determine-composer-cache-directory.outputs.directory }}
                       ${{ github.workspace }}/vendor
                   key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
-            - uses: 'ramsey/composer-install@v2'
+            - uses: 'ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f' # v3.2.1
               with:
                   dependency-versions: 'highest'
             - run: './vendor/bin/phpstan'
@@ -71,8 +71,8 @@ jobs:
             matrix:
                 php: ['8.1']
         steps:
-            - uses: 'actions/checkout@v2'
-            - uses: 'shivammathur/setup-php@v2'
+            - uses: 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' # v4
+            - uses: 'shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45' # v2
               with:
                   coverage: 'none'
                   php-version: '${{ matrix.php }}'
@@ -81,14 +81,14 @@ jobs:
               id: 'determine-composer-cache-directory'
               run: 'echo "::set-output name=directory::$(composer config cache-dir)"'
             - name: 'Cache dependencies installed with composer'
-              uses: 'actions/cache@v3'
+              uses: 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' # v4
               with:
                   path: |
                       ${{ steps.determine-composer-cache-directory.outputs.directory }}
                       ${{ github.workspace }}/vendor
                   key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
-            - uses: 'ramsey/composer-install@v2'
+            - uses: 'ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f' # v3.2.1
               with:
                   dependency-versions: 'highest'
             - run: './vendor/bin/phpunit'
