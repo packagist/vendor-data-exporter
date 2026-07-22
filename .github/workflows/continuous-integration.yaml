@@ -11,17 +11,22 @@ on:
 permissions:
     contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
     code-style:
+        name: 'Code style'
         runs-on: 'ubuntu-22.04'
         strategy:
             matrix:
                 php: ['8.1']
         steps:
-            - uses: 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' # v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                   persist-credentials: false
-            - uses: 'shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45' # v2
+            - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
               with:
                   coverage: 'none'
                   php-version: '${{ matrix.php }}'
@@ -37,21 +42,22 @@ jobs:
                       ${{ github.workspace }}/vendor
                   key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
-            - uses: 'ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f' # v3.2.1
+            - uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # 3.2.1
               with:
                   dependency-versions: 'highest'
             - run: './vendor/bin/php-cs-fixer fix --dry-run --diff --verbose'
 
     static-analysis:
+        name: 'Static analysis'
         runs-on: 'ubuntu-22.04'
         strategy:
             matrix:
                 php: ['8.1']
         steps:
-            - uses: 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' # v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                   persist-credentials: false
-            - uses: 'shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45' # v2
+            - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
               with:
                   coverage: 'none'
                   php-version: '${{ matrix.php }}'
@@ -67,21 +73,22 @@ jobs:
                       ${{ github.workspace }}/vendor
                   key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
-            - uses: 'ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f' # v3.2.1
+            - uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # 3.2.1
               with:
                   dependency-versions: 'highest'
             - run: './vendor/bin/phpstan'
 
     phpunit:
+        name: 'PHPUnit'
         runs-on: 'ubuntu-22.04'
         strategy:
             matrix:
                 php: ['8.1']
         steps:
-            - uses: 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' # v4
+            - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
               with:
                   persist-credentials: false
-            - uses: 'shivammathur/setup-php@b604ade2a87db23f8871b7182e69ec5e75effb45' # v2
+            - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
               with:
                   coverage: 'none'
                   php-version: '${{ matrix.php }}'
@@ -97,7 +104,7 @@ jobs:
                       ${{ github.workspace }}/vendor
                   key: "php-${{ matrix.php }}-${{ hashFiles('composer.lock') }}"
                   restore-keys: 'php-${{ matrix.php }}-'
-            - uses: 'ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f' # v3.2.1
+            - uses: ramsey/composer-install@a8d0d959dab41457692a5e2041bd9b757a119e3f # 3.2.1
               with:
                   dependency-versions: 'highest'
             - run: './vendor/bin/phpunit'
